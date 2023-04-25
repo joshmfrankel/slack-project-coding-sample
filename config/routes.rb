@@ -3,4 +3,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+  post "slack_commands", to: "slack_commands#create"
+  post "interactions", to: "interactions#create"
 end
