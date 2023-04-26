@@ -63,8 +63,16 @@ module Slack
         end
 
         context "for `declare` command" do
-          should "return 200 success" do
-            post slack_commands_path, params: { command: "/rootly", text: "declare title" }
+          should "raises ArgumentError without trigger_id" do
+            assert_raises ArgumentError do
+              post slack_commands_path, params: { command: "/rootly", text: "declare title", trigger_id: nil }
+            end
+          end
+
+          should "send API request to open incident modal" do
+            stub_request(:post, "https://slack.com/api/views.open")
+
+            post slack_commands_path, params: { command: "/rootly", text: "declare title", trigger_id: 1234 }
 
             assert_response :success
           end

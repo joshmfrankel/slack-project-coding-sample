@@ -4,6 +4,7 @@ require "rails/test_help"
 
 require "pry"
 require "mocha/minitest"
+require "webmock/minitest"
 
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers

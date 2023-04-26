@@ -31,3 +31,21 @@
 
 en:
   hello: "Hello world"
+  slack:
+    commands:
+      create:
+        error: We're sorry. This command wasn't recognized.
+        help:
+          text: "Rootly Commands\n\n* `/rootly declare <title>` - Create a new incident\n* `/rootly resolve` - Resolve an incident from a channel\n* `/rootly help` - Display help options"
+        modal:
+          title: Create a new Incident
+          submit: Submit
+          labels:
+            title: Title
+            description: Description
+            severity: Severity
+          inputs:
+            severity: Select a severity level
+            sev0: sev0
+            sev1: sev1
+            sev2: sev2
