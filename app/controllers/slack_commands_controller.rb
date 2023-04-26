@@ -1,6 +1,8 @@
 class SlackCommandsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  # TODO signature verification
+
   def create
     # return unless params[:command] == "/rootly"
     # return unless text_command is declare, resolve, or help
@@ -9,6 +11,7 @@ class SlackCommandsController < ApplicationController
 
     # TODO: Determine approach given the incoming command
 
+    # Service objects?
     case text_command
     when "declare"
       client = Slack::Web::Client.new
@@ -97,6 +100,11 @@ class SlackCommandsController < ApplicationController
         }
       )
       head 200
+    when "resolve"
+      # TODO
+      # Message when Incident channel not found
+      # Success message after attempt
+      # Future: Shortcut syntax to pass an Incident id `/rootly resolve <id>`
     when "help"
       render json: {
         blocks: [
@@ -116,7 +124,7 @@ class SlackCommandsController < ApplicationController
             type: "section",
             text: {
               type: "plain_text",
-              text: "We're sorry. This command wasn't recognized.",
+              text: "We're sorry. This command wasn't recognized."
             }
           }
         ]
