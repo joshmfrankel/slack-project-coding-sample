@@ -1,9 +1,14 @@
+# frozen_string_literal: true
+
 module Slack
+  # Entry point for all `/rootly` Slack Slash commands
   class CommandsController < ApplicationController
+    include Slack::VerifyRequestSignature
+
     skip_before_action :verify_authenticity_token
 
     def create
-      return error_building_blocks_response unless params[:text].present?
+      return json_error_response unless params[:text].present?
       text_command, text_payload = params[:text].split(" ", 2)
 
       case text_command
@@ -22,13 +27,13 @@ module Slack
           ]
         }
       else
-        error_building_blocks_response
+        json_error_response
       end
     end
 
     private
 
-    def error_building_blocks_response
+    def json_error_response
       render json: {
         blocks: [
           {

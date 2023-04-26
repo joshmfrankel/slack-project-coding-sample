@@ -16,6 +16,9 @@ gem "jbuilder" # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # For .env environmental variable files
 gem "dotenv-rails"
 
+# For Slack API and verifiying signature
+gem "slack-ruby-client"
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 
@@ -63,6 +66,7 @@ group :test do
   gem "webdrivers"
 
   # Added by Josh Frankel
-  gem "webmock"
-  gem "shoulda-context"
+  gem "webmock" # For external request stubbing
+  gem "shoulda-context" # For context dsl organization in Minitest
+  gem "mocha" # For mocks and stubs
 end
