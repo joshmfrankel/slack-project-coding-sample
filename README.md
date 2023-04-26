@@ -1,2 +1,3 @@
-# rootly-tech-challenge
-A small Slack bot and web UI using Slack API
+# Slack bot challenge
+
+web: https://slack-bot-challenge.onrender.com/

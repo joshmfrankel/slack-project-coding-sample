@@ -49,3 +49,7 @@ en:
             sev0: sev0
             sev1: sev1
             sev2: sev2
+
+    interactions:
+      create:
+        error: There was a problem communicating with Slack. Please try again later.
