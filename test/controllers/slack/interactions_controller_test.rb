@@ -187,7 +187,9 @@ module Slack
                       c: {
                         severity_selection: {
                           type: "static_select",
-                          value: "sev1"
+                          selected_option: {
+                            value: "sev1"
+                          }
                         }
                       }
                     }
@@ -209,15 +211,11 @@ module Slack
                   }
                 ).to_return(body: stubbed_create_channel_result)
 
-              stubbed_join_channel_result = {
+              stubbed_post_message_result = {
                 ok: true
               }.to_json
-              stub_request(:post, "https://slack.com/api/conversations.join")
-                .with(
-                  body: {
-                    channel: channel_id
-                  }
-                ).to_return(body: stubbed_join_channel_result)
+              stub_request(:post, "https://slack.com/api/chat.postMessage")
+                .to_return(body: stubbed_post_message_result)
 
               assert_difference "Incident.count" do
                 post slack_interactions_path, params: {

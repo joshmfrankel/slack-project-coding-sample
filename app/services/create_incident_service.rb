@@ -41,31 +41,11 @@ class CreateIncidentService < ApplicationService
   def post_success_message(create_channel_result)
     channel_id = create_channel_result["channel"]["id"]
 
+    formatted_blocks = format_success_message_blocks(incident: @incident, channel_id: channel_id)
+
     post_message_result = @slack_client.chat_postMessage(
       channel: channel_id,
-      blocks: [
-        {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text: "#{@incident.title} was created by #{@incident.external_slack_user_id_mention} in #{slack_channel_format(channel_id)}"
-          }
-        },
-        {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text: "*Severity*: #{@incident.severity}"
-          }
-        },
-        {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text: "*Description*: #{@incident.description}"
-          }
-        }
-      ]
+      blocks: formatted_blocks
     )
 
     if post_message_result["ok"]
@@ -76,6 +56,38 @@ class CreateIncidentService < ApplicationService
   end
 
   private
+
+  def format_success_message_blocks(incident:, channel_id:)
+    [
+      {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: "#{@incident.title} was created by #{@incident.external_slack_user_id_mention} in #{slack_channel_format(channel_id)}"
+        }
+      }
+    ].tap do |block|
+      if @incident.severity.present?
+        block << {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: "*Severity*: #{@incident.severity}"
+          }
+        }
+      end
+
+      if @incident.description.present?
+        block << {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: "*Description*: #{@incident.description}"
+          }
+        }
+      end
+    end
+  end
 
   def slack_channel_format(channel_id)
     "<##{channel_id}>"

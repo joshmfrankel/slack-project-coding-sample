@@ -25,10 +25,8 @@ module Slack
           external_slack_user_id: interaction_transformer.slack_user_id
         )
 
-        # Future: This could be moved into a Sidekiq background job. Slack
-        # response_actions only have a threshold of 3 seconds to send so if
-        # we made this asynchronous we'd need to utilize the API to send
-        # a response message instead of a json payload
+        # Future: This could be moved into a Sidekiq background job to offload
+        # processing into asynchronous queue.
         service = CreateIncidentService.new(new_incident: incident).call
 
         if service.success?
@@ -37,8 +35,8 @@ module Slack
 
           # Limitation: `view_submission` payloads have a 3 second window to
           # respond with json to a request. If the service above takes longer
-          # than that the following response won't be sent. Possibly fixed with
-          # a background job as described above.
+          # than that the following response won't be sent. Switching to the
+          # chat_postMessage api endpoint may be useful in the future
           render json: {
             response_action: "update",
             view: {

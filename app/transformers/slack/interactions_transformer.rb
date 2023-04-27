@@ -8,7 +8,7 @@ module Slack
     attr_reader :parsed_payload
 
     def initialize(json_payload)
-      @parsed_payload = JSON.parse(json_payload)
+      @parsed_payload = json_payload.is_a?(Hash) ? json_payload : JSON.parse(json_payload)
     end
 
     def callback_id
@@ -33,9 +33,18 @@ module Slack
     def formatted_state_values
       @_formatted_state_values ||= {}.tap do |values_hash|
         parsed_payload["view"]["state"]["values"].each do |_, value|
-          values_hash[value.keys[0]] = if value[value.keys[0]]["type"] == "static_select"
+          values_hash[value.keys[0]] = case value[value.keys[0]]["type"]
+          when "static_select"
+            next if value[value.keys[0]]["selected_option"].nil?
             value[value.keys[0]]["selected_option"]["value"]
+          when "plain_text_input"
+            next if value[value.keys[0]]["value"].nil?
+            value[value.keys[0]]["value"]
           else
+            logger.info "No transformer implementation for #{value[value.keys[0]]["type"]}"
+
+            # Utilize default value parsing in the absence of specific transformer
+            # type implementation above
             value[value.keys[0]]["value"]
           end
         end
