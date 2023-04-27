@@ -15,8 +15,9 @@ class Incident < ApplicationRecord
   validates :title, presence: true
   validates :external_slack_user_id, presence: true
 
-  # TODO: character limit 21
+  # Slack channel names have several requirements enforced by conversations
+  # @see https://api.slack.com/methods/conversations.rename#naming
   def slack_channel_name
-    "#{title.downcase.tr(" ", "-")}-#{id}"
+    "#{id}-#{title.downcase.tr(" ", "-")}"
   end
 end

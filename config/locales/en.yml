@@ -53,3 +53,4 @@ en:
     interactions:
       create:
         error: There was a problem communicating with Slack. Please try again later.
+        success: "Your new incident was created in the #%{channel} channel."

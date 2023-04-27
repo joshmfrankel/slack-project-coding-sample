@@ -23,30 +23,19 @@ module Slack
         external_slack_user_id = parsed_payload["user"]["id"]
 
         incident = Incident.new(
-          title: parsed_form_data["title_input"],
+          title: nil,
           description: parsed_form_data["description_input"],
           severity: parsed_form_data["severity_selection"],
           status: :declared,
           external_slack_user_id: external_slack_user_id
         )
 
-        if incident.save
-          client = Slack::Web::Client.new
-          create_channel_result = client
-            .conversations_create(
-              name: incident.slack_channel_name
-            )
+        service = CreateIncidentService.new(incident: incident).call
 
-          if create_channel_result["ok"]
-            client.conversations_join(channel: create_channel_result["channel"]["id"])
-
-            # TODO: Respond with success message telling user to join #channel
-            head 200
-          else
-            slack_service_error_response
-          end
+        if service.success?
+          head 200
         else
-          # TODO: failed to create incident message db
+          binding.pry
         end
       else
         slack_service_error_response

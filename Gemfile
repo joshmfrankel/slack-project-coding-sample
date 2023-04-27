@@ -19,6 +19,8 @@ gem "dotenv-rails"
 # For Slack API and verifiying signature
 gem "slack-ruby-client"
 
+gem "dry-monads"
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 
