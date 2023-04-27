@@ -20,7 +20,7 @@ class CreateIncidentService < ApplicationService
     if @incident.save
       Success(@incident)
     else
-      Failure[:failed_to_save_incident_in_db, @incident.errors]
+      Failure[:failed_to_save_incident_in_db, @incident.errors.map(&:full_message).to_sentence]
     end
   end
 
@@ -33,7 +33,7 @@ class CreateIncidentService < ApplicationService
     if create_channel_result["ok"]
       Success(create_channel_result)
     else
-      Failure[:failed_to_create_channel]
+      Failure[:failed_to_create_channel, "Channel could not be created. Please try again later."]
     end
   end
 
@@ -46,7 +46,7 @@ class CreateIncidentService < ApplicationService
     if join_channel_result["ok"]
       Success(join_channel_result)
     else
-      Failure[:failed_to_join_channel]
+      Failure[:failed_to_join_channel, "Bot couldn't join channel. Please try again later."]
     end
   end
 end

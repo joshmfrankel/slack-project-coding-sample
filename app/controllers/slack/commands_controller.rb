@@ -4,6 +4,7 @@ module Slack
   # Entry point for all `/rootly` Slack Slash commands
   class CommandsController < ApplicationController
     include Slack::VerifyRequestSignature
+    include Slack::Constants
 
     skip_before_action :verify_authenticity_token
 
@@ -18,7 +19,7 @@ module Slack
           trigger_id: params[:trigger_id],
           view: {
             type: "modal",
-            callback_id: "declare-incident-modal",
+            callback_id: CREATE_INCIDENT_MODAL_CALLBACK_ID,
             title: {
               type: "plain_text",
               text: I18n.t("slack.commands.create.modal.title")
