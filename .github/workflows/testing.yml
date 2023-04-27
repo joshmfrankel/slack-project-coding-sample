@@ -50,4 +50,4 @@ jobs:
           RAILS_ENV: test
           PG_USER: postgres
         run: |
-          bin/rails test test/ engines/api/test/
+          bin/rails test test/
