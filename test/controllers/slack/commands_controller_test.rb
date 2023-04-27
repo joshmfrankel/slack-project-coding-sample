@@ -90,7 +90,7 @@ module Slack
                   "type" => "section",
                   "text" => {
                     "type" => "mrkdwn",
-                    "text" => "This channel doesn't match any available incidents."
+                    "text" => "This channel doesn't match any available incidents or the Incident has already been resolved."
                   }
                 }
               ]
