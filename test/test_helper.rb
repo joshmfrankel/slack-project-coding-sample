@@ -6,6 +6,9 @@ require "pry"
 require "mocha/minitest"
 require "webmock/minitest"
 
+# Require all support helpers
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
+
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors)
