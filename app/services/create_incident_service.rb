@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class CreateIncidentService < ApplicationService
-  def initialize(incident:)
-    @incident = incident
+  def initialize(new_incident:)
+    @incident = new_incident
     @slack_client = Slack::Web::Client.new
   end
 

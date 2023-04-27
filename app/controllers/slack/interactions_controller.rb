@@ -29,7 +29,7 @@ module Slack
         # response_actions only have a threshold of 3 seconds to send so if
         # we made this asynchronous we'd need to utilize the API to send
         # a response message instead of a json payload
-        service = CreateIncidentService.new(incident: incident).call
+        service = CreateIncidentService.new(new_incident: incident).call
 
         if service.success?
           head :ok
