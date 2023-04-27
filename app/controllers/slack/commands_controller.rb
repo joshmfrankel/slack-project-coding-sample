@@ -5,9 +5,11 @@ module Slack
   class CommandsController < ApplicationController
     include Slack::VerifyRequestSignature
     include Slack::Constants
+    include ActionView::Helpers::DateHelper
 
     skip_before_action :verify_authenticity_token
 
+    # @see https://www.rubydoc.info/docs/rails/3.2.8/ActionView/Helpers/DateHelper:distance_of_time_in_words
     def create
       return json_error_response unless params[:text].present?
       text_command, text_payload = params[:text].split(" ", 2)
@@ -102,6 +104,40 @@ module Slack
           }
         )
         head 200
+      when "resolve"
+        incident = Incident.find_by(external_slack_channel_id: params["channel_id"], status: :declared)
+
+        if incident.present?
+          incident.update(status: :resolved)
+
+          render json: {
+            blocks: [
+              {
+                type: "section",
+                text: {
+                  type: "mrkdwn",
+                  text: I18n.t(
+                    "slack.commands.create.resolve.success",
+                    incident: incident.title,
+                    elapsed_time: distance_of_time_in_words(incident.created_at, incident.updated_at)
+                  )
+                }
+              }
+            ]
+          }
+        else
+          render json: {
+            blocks: [
+              {
+                type: "section",
+                text: {
+                  type: "mrkdwn",
+                  text: I18n.t("slack.commands.create.resolve.not_found")
+                }
+              }
+            ]
+          }
+        end
       when "help"
         render json: {
           blocks: [

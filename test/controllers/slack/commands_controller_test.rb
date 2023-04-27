@@ -78,6 +78,55 @@ module Slack
           end
         end
 
+        context "for `resolve` command" do
+          should "return not found message when there isn't a Slack channel id in the Incidents table" do
+            post slack_commands_path, params: { command: "/rootly", text: "resolve", channel_id: "invalid_id" }
+
+            json_response = JSON.parse(response.body)
+
+            assert_equal json_response, {
+              "blocks" => [
+                {
+                  "type" => "section",
+                  "text" => {
+                    "type" => "mrkdwn",
+                    "text" => "This channel doesn't match any available incidents."
+                  }
+                }
+              ]
+            }
+          end
+
+          should "return total time it took for Incident to be resolved" do
+            external_slack_channel_id = "channel_id"
+            incident = Incident.create(
+              external_slack_channel_id: external_slack_channel_id,
+              external_slack_user_id: "some_id",
+              title: "Testing resolution of incident",
+              status: :declared,
+              created_at: 3.days.ago,
+              updated_at: Time.now
+            )
+
+            post slack_commands_path, params: { command: "/rootly", text: "resolve", channel_id: external_slack_channel_id }
+
+            json_response = JSON.parse(response.body)
+
+            assert_equal "resolved", incident.reload.status
+            assert_equal json_response, {
+              "blocks" => [
+                {
+                  "type" => "section",
+                  "text" => {
+                    "type" => "mrkdwn",
+                    "text" => "Congratulations! Incident *#{incident.title}* was resolved in 3 days."
+                  }
+                }
+              ]
+            }
+          end
+        end
+
         context "for `help` command" do
           should "return immediate building blocks message" do
             post slack_commands_path, params: { command: "/rootly", text: "help" }

@@ -37,6 +37,9 @@ en:
         error: We're sorry. This command wasn't recognized.
         help:
           text: "Rootly Commands\n\n* `/rootly declare <title>` - Create a new incident\n* `/rootly resolve` - Resolve an incident from a channel\n* `/rootly help` - Display help options"
+        resolve:
+          not_found: This channel doesn't match any available incidents or the Incident has already been resolved.
+          success: Congratulations! Incident *%{incident}* was resolved in %{elapsed_time}.
         modal:
           title: Create a new Incident
           submit: Submit

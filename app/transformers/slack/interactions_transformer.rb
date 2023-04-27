@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Slack
-
   # This transformer ensures incoming JSON Payload data is properly parsed
   # along with providing helpful shortcuts to important pieces of response data.
   class InteractionsTransformer

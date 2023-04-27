@@ -10,9 +10,10 @@ class CreateIncidentService < ApplicationService
   def call
     persisted_incident = yield save_incident
     create_channel_result = yield create_incident_channel(persisted_incident)
-    yield post_success_message(create_channel_result)
+    incident_with_channel_result = yield update_incident_with_channel(incident: persisted_incident, create_channel_result: create_channel_result)
+    post_success_message_result = yield post_success_message(create_channel_result)
 
-    Success([persisted_incident, create_channel_result])
+    Success([persisted_incident, create_channel_result, incident_with_channel_result, post_success_message_result])
   end
 
   private
@@ -35,6 +36,14 @@ class CreateIncidentService < ApplicationService
       Success(create_channel_result)
     else
       Failure[:failed_to_create_channel, "Channel could not be created. Please try again later."]
+    end
+  end
+
+  def update_incident_with_channel(incident:, create_channel_result:)
+    if incident.update(external_slack_channel_id: create_channel_result["channel"]["id"])
+      Success(incident)
+    else
+      Failure[:failed_to_update_incident_channel_in_db, incident.errors.map(&:full_message).to_sentence]
     end
   end
 
