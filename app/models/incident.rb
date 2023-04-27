@@ -20,4 +20,9 @@ class Incident < ApplicationRecord
   def slack_channel_name
     "#{id}-#{title.downcase.tr(" ", "-")}"
   end
+
+  # @see https://api.slack.com/reference/surfaces/formatting#mentioning-users
+  def external_slack_user_id_mention
+    "<@#{external_slack_user_id}>"
+  end
 end

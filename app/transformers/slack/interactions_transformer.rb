@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module Slack
+
+  # This transformer ensures incoming JSON Payload data is properly parsed
+  # along with providing helpful shortcuts to important pieces of response data.
   class InteractionsTransformer
     attr_reader :parsed_payload
 
@@ -30,7 +33,11 @@ module Slack
     def formatted_state_values
       @_formatted_state_values ||= {}.tap do |values_hash|
         parsed_payload["view"]["state"]["values"].each do |_, value|
-          values_hash[value.keys[0]] = value[value.keys[0]]["value"]
+          values_hash[value.keys[0]] = if value[value.keys[0]]["type"] == "static_select"
+            value[value.keys[0]]["selected_option"]["value"]
+          else
+            value[value.keys[0]]["value"]
+          end
         end
       end
     end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Contains all related business logic for creating a new Incident
 class CreateIncidentService < ApplicationService
   def initialize(new_incident:)
     @incident = new_incident
@@ -9,9 +10,9 @@ class CreateIncidentService < ApplicationService
   def call
     persisted_incident = yield save_incident
     create_channel_result = yield create_incident_channel(persisted_incident)
-    join_channel_result = yield join_channel_as_bot(create_channel_result)
+    yield post_success_message(create_channel_result)
 
-    Success([persisted_incident, create_channel_result, join_channel_result])
+    Success([persisted_incident, create_channel_result])
   end
 
   private
@@ -37,16 +38,46 @@ class CreateIncidentService < ApplicationService
     end
   end
 
-  def join_channel_as_bot(create_channel_result)
-    join_channel_result = @slack_client
-      .conversations_join(
-        channel: create_channel_result["channel"]["id"]
-      )
+  def post_success_message(create_channel_result)
+    channel_id = create_channel_result["channel"]["id"]
 
-    if join_channel_result["ok"]
-      Success(join_channel_result)
+    post_message_result = @slack_client.chat_postMessage(
+      channel: channel_id,
+      blocks: [
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: "#{@incident.title} was created by #{@incident.external_slack_user_id_mention} in #{slack_channel_format(channel_id)}"
+          }
+        },
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: "*Severity*: #{@incident.severity}"
+          }
+        },
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: "*Description*: #{@incident.description}"
+          }
+        }
+      ]
+    )
+
+    if post_message_result["ok"]
+      Success(post_message_result)
     else
-      Failure[:failed_to_join_channel, "Bot couldn't join channel. Please try again later."]
+      Failure[:failed_to_post_message, "Bot was unable to post message. Please try again later."]
     end
+  end
+
+  private
+
+  def slack_channel_format(channel_id)
+    "<##{channel_id}>"
   end
 end
