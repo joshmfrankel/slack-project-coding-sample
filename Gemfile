@@ -72,6 +72,6 @@ group :test do
   gem "webmock" # For external request stubbing
   gem "shoulda-context" # For context dsl organization in Minitest
   gem "mocha" # For mocks and stubs
-  # For debugging
-  gem "pry"
+  gem "pry" # For debugging
+  gem "climate_control" # For stubbing EnvVars
 end
