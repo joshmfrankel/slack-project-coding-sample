@@ -18,6 +18,10 @@ module Slack
       parsed_payload["user"]["id"]
     end
 
+    def slack_team_id
+      parsed_payload["team"]["id"]
+    end
+
     # This method accepts state values from Slack response and transforms them
     # into a Hash data structure. Given that it is in Hash format and likely
     # to be used multiple times in a row, this method has been memoized for

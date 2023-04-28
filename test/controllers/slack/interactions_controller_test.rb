@@ -63,6 +63,9 @@ module Slack
                 user: {
                   id: "XHDI12AH"
                 },
+                team: {
+                  id: "T09125712"
+                },
                 view: {
                   callback_id: Slack::Constants::CREATE_INCIDENT_MODAL_CALLBACK_ID,
                   state: {
@@ -110,6 +113,9 @@ module Slack
               payload_json = {
                 user: {
                   id: "XHDI12AH"
+                },
+                team: {
+                  id: "T09125712"
                 },
                 view: {
                   callback_id: Slack::Constants::CREATE_INCIDENT_MODAL_CALLBACK_ID,
@@ -163,9 +169,13 @@ module Slack
 
           context "when CreateIncidentService is successful" do
             should "parses payload, sends messages to Slack API, and persists to Incident model" do
+              team_id = "T09125712"
               payload_json = {
                 user: {
                   id: "XHDI12AH"
+                },
+                team: {
+                  id: team_id
                 },
                 view: {
                   callback_id: Slack::Constants::CREATE_INCIDENT_MODAL_CALLBACK_ID,
@@ -207,7 +217,9 @@ module Slack
               stub_request(:post, "https://slack.com/api/conversations.create")
                 .with(
                   body: {
-                    name: /(\d+)-my-first-incident/ # Regex allows for ensuring that future channel names in test setup always work
+                    # Regex allows for ensuring that future channel names in test setup always work
+                    name: /(\d+)-my-first-incident/,
+                    team_id: team_id
                   }
                 ).to_return(body: stubbed_create_channel_result)
 
