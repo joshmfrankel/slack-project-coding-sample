@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Slack.configure do |config|
-  config.token = ENV["SLACK_API_TOKEN"]
+  config.token = ENV["SLACK_BOT_OAUTH_TOKEN"]
 end
 
 Slack::Events.configure do |config|
