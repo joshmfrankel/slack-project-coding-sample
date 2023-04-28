@@ -30,7 +30,19 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  time:
+    formats:
+      long: "%m/%d/%Y at %I:%M:%S %P"
+
   hello: "Hello world"
+
+  incidents:
+    index:
+      title: Incidents
+      severity: Severity
+      status: Status
+      slack_channel: Slack channel
+
   slack:
     commands:
       create:
