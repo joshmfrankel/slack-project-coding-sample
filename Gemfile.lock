@@ -156,6 +156,7 @@ GEM
     nio4r (2.5.9)
     nokogiri (1.14.3-x86_64-linux)
       racc (~> 1.4)
+    pagy (6.0.3)
     pg (1.3.5)
     pry (0.14.2)
       coderay (~> 1.1)
@@ -261,6 +262,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   mocha
+  pagy
   pg (~> 1.1)
   pry
   puma (~> 5.0)

@@ -1,0 +1,36 @@
+<%= link_to root_path, class: "flex mb-3 no-underline text-gray-800" do %>
+  <%= image_tag "logo.jpg", width: 80, height: 80, class: "rounded-full mr-5" %>
+  <h1><%= I18n.t("incidents.index.title") %></h1>
+<% end %>
+
+<% @incidents.each do |incident| %>
+  <% incident = IncidentPresenter.new(incident) %>
+
+  <div class="flex border border-gray-300 p-5 mb-3 rounded incident">
+    <div class="pr-7 border-r border-gray-100">
+      <h2><%= incident.title %></h2>
+      <div class="text-sm">
+        <p class="text-gray-500"><%= I18n.l(incident.created_at, format: :long) %></p>
+        <% if incident.severity.present? %>
+          <p><strong><%= I18n.t("incidents.index.severity") %></strong>: <%= incident.severity %></p>
+        <% end %>
+
+        <% if incident.status.present? %>
+          <p><strong><%= I18n.t("incidents.index.status") %></strong>: <span class="<%= incident.status_classes %>"><%= incident.status %></span></p>
+        <% end %>
+
+        <p><strong><%= I18n.t("incidents.index.slack_channel") %></strong>: #<%= incident.slack_channel_name %></p>
+      </div>
+    </div>
+
+    <% if incident.description.present? %>
+      <div class="pl-7">
+        <p><%= incident.description %></p>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="flex flex-col items-center p-5">
+  <%= pagy_nav(@pagy).html_safe %>
+</div>

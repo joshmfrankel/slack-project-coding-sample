@@ -19,7 +19,11 @@ gem "dotenv-rails"
 # For Slack API and verifiying signature
 gem "slack-ruby-client"
 
+# For Railway oriented pattern in Service objects
 gem "dry-monads"
+
+# For fast pagination
+gem "pagy"
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
