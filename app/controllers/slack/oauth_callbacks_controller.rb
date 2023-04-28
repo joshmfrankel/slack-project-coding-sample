@@ -7,14 +7,24 @@ module Slack
   class OauthCallbacksController < ApplicationController
     def new
       client = Slack::Web::Client.new
-      client.oauth_v2_access(
+      result = client.oauth_v2_access(
         code: params[:code],
         client_id: ENV["SLACK_CLIENT_ID"],
         client_secret: ENV["SLACK_CLIENT_SECRET"],
         redirect_uri: ENV["SLACK_OAUTH_REDIRECT_URI"]
       )
 
-      head :ok
+      if result[:ok] == true
+        slack_team = SlackTeam.new(access_token: result[:access_token], external_team_id: result[:team][:id])
+
+        if slack_team.save
+          head :ok
+        else
+          head 500
+        end
+      else
+        head 500
+      end
     end
   end
 end
