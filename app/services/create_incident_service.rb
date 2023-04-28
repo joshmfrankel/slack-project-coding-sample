@@ -2,9 +2,10 @@
 
 # Contains all related business logic for creating a new Incident
 class CreateIncidentService < ApplicationService
-  def initialize(new_incident:)
+  def initialize(new_incident:, team_id:)
     @incident = new_incident
     @slack_client = Slack::Web::Client.new
+    @team_id = team_id
   end
 
   def call
@@ -29,7 +30,8 @@ class CreateIncidentService < ApplicationService
   def create_incident_channel(persisted_incident)
     create_channel_result = @slack_client
       .conversations_create(
-        name: persisted_incident.slack_channel_name
+        name: persisted_incident.slack_channel_name,
+        team_id: @team_id
       )
 
     if create_channel_result["ok"]

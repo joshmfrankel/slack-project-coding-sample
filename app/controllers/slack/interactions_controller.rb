@@ -27,7 +27,10 @@ module Slack
 
         # Future: This could be moved into a Sidekiq background job to offload
         # processing into asynchronous queue.
-        service = CreateIncidentService.new(new_incident: incident).call
+        service = CreateIncidentService.new(
+          new_incident: incident,
+          team_id: interaction_transformer.slack_team_id
+        ).call
 
         if service.success?
           head :ok
