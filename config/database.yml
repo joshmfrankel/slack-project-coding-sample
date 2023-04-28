@@ -82,6 +82,7 @@ test:
 #
 production:
   <<: *default
-  database: rootly_tech_challenge_production
-  username: rootly_tech_challenge
-  password: <%= ENV["ROOTLY_TECH_CHALLENGE_DATABASE_PASSWORD"] %>
+  database: <%= ENV["DATABASE_NAME"] %>
+  username: <%= ENV["DATABASE_USERNAME"] %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
+  url: <%= ENV['DATABASE_URL'] %>
