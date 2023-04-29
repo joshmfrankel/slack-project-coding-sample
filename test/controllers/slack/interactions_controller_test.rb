@@ -77,7 +77,8 @@ module Slack
 
               payload_json = {
                 user: {
-                  id: "XHDI12AH"
+                  id: "XHDI12AH",
+                  name: "Jane User"
                 },
                 team: {
                   id: "T09125712"
@@ -135,7 +136,8 @@ module Slack
 
               payload_json = {
                 user: {
-                  id: "XHDI12AH"
+                  id: "XHDI12AH",
+                  name: "Jane User"
                 },
                 team: {
                   id: "T09125712"
@@ -193,10 +195,13 @@ module Slack
           context "when CreateIncidentService is successful" do
             should "parses payload, sends messages to Slack API, and persists to Incident model" do
               team_id = "T09125712"
+              user_id = "XHDI12AH"
+              user_name = "Jane User"
               SlackTeam.create(external_team_id: team_id, access_token: "string_token")
               payload_json = {
                 user: {
-                  id: "XHDI12AH"
+                  id: user_id,
+                  name: user_name
                 },
                 team: {
                   id: team_id
@@ -257,6 +262,10 @@ module Slack
                   payload: payload_json
                 }
               end
+
+              incident_exists = Incident.exists?(external_slack_user_id: user_id, external_slack_user_name: user_name)
+
+              assert incident_exists
 
               assert_response :success
             end

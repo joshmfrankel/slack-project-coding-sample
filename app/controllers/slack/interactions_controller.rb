@@ -26,7 +26,8 @@ module Slack
           description: interaction_transformer.formatted_state_values["description_input"],
           severity: interaction_transformer.formatted_state_values["severity_selection"],
           status: :declared,
-          external_slack_user_id: interaction_transformer.slack_user_id
+          external_slack_user_id: interaction_transformer.slack_user_id,
+          external_slack_user_name: interaction_transformer.slack_user_name
         )
 
         # Future: This could be moved into a Sidekiq background job to offload
