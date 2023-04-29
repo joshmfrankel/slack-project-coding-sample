@@ -2,6 +2,13 @@
 
 class IncidentsController < ApplicationController
   def index
-    @pagy, @incidents = pagy(Incident.order(created_at: :desc))
+    incidents = IncidentQuery.new(
+      Incident,
+      sort: params[:sort],
+      severity: params[:severity],
+      status: params[:status]
+    ).call
+
+    @pagy, @incidents = pagy(incidents)
   end
 end
