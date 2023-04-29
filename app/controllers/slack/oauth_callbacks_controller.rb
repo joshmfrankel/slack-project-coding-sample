@@ -6,6 +6,10 @@ module Slack
   # @see https://api.slack.com/methods/oauth.v2.access
   class OauthCallbacksController < ApplicationController
     def new
+      return head 400 if session[:state] != params[:state]
+
+      session[:state] = nil
+
       client = Slack::Web::Client.new
       result = client.oauth_v2_access(
         code: params[:code],

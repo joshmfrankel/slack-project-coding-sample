@@ -7,19 +7,23 @@
   <% incident = IncidentPresenter.new(incident) %>
 
   <div class="flex border border-gray-300 p-5 mb-3 rounded incident">
-    <div class="pr-7 border-r border-gray-100">
-      <h2><%= incident.title %></h2>
+    <div class="pr-7 border-r border-gray-100 w-33">
+      <h2 class="mb-0"><%= incident.title %></h2>
       <div class="text-sm">
         <p class="text-gray-500"><%= I18n.l(incident.created_at, format: :long) %></p>
         <% if incident.severity.present? %>
-          <p><strong><%= I18n.t("incidents.index.severity") %></strong>: <%= incident.severity %></p>
+          <p class="mb-0"><strong><%= I18n.t("incidents.index.severity") %></strong>: <%= incident.severity %></p>
         <% end %>
 
         <% if incident.status.present? %>
-          <p><strong><%= I18n.t("incidents.index.status") %></strong>: <span class="<%= incident.status_classes %>"><%= incident.status %></span></p>
+          <p class="mb-0"><strong><%= I18n.t("incidents.index.status") %></strong>: <span class="<%= incident.status_classes %>"><%= incident.status %></span></p>
         <% end %>
 
-        <p><strong><%= I18n.t("incidents.index.slack_channel") %></strong>: #<%= incident.slack_channel_name %></p>
+        <% if incident.external_slack_user_name.present? %>
+          <p class="mb-0"><strong><%= I18n.t("incidents.index.creator") %></strong>: <%= incident.external_slack_user_name %></p>
+        <% end %>
+
+        <p class="mb-0"><strong><%= I18n.t("incidents.index.slack_channel") %></strong>: #<%= incident.slack_channel_name %></p>
       </div>
     </div>
 

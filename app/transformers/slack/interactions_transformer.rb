@@ -18,6 +18,10 @@ module Slack
       parsed_payload["user"]["id"]
     end
 
+    def slack_user_name
+      parsed_payload["user"]["name"]
+    end
+
     def slack_team_id
       parsed_payload["team"]["id"]
     end
