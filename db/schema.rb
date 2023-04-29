@@ -30,6 +30,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_28_194949) do
     t.string "access_token", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["external_team_id"], name: "index_slack_teams_on_external_team_id", unique: true
   end
 
 end

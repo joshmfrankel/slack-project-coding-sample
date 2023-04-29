@@ -15,12 +15,12 @@ module Slack
       )
 
       if result[:ok] == true
-        slack_team = SlackTeam.new(
-          access_token: result[:access_token],
+        slack_team = SlackTeam.find_or_initialize_by(
           external_team_id: result[:team][:id]
         )
 
-        if slack_team.save
+        # Subsequent oauth attempts update access_token
+        if slack_team.update(access_token: result[:access_token])
           head :ok
         else
           head 500
