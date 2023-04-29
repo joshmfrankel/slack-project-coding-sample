@@ -2,7 +2,6 @@
 
 module Slack
   # Entry point for all interactions that take place within Slack interface
-  # Note: Channel names have a 21-character limit and can include lowercase letters, non-Latin characters, numbers, and hyphens.
   # @see https://help.nintex.com/en-us/nwc/Content/Designer/Actions/Slack-CreateaChannel.htm
   class InteractionsController < ApplicationController
     include Slack::VerifyRequestSignature
@@ -14,6 +13,11 @@ module Slack
       return slack_service_error_response unless params[:payload].present?
 
       interaction_transformer = Slack::InteractionsTransformer.new(params["payload"])
+
+      # Determine correct team for interacting with Slack API
+      slack_team = SlackTeam.find_by(external_team_id: interaction_transformer.slack_team_id)
+
+      return slack_service_error_response unless slack_team.present?
 
       case interaction_transformer.callback_id
       when CREATE_INCIDENT_MODAL_CALLBACK_ID
@@ -29,7 +33,7 @@ module Slack
         # processing into asynchronous queue.
         service = CreateIncidentService.new(
           new_incident: incident,
-          team_id: interaction_transformer.slack_team_id
+          slack_client: Slack::Web::Client.new(token: slack_team.access_token)
         ).call
 
         if service.success?

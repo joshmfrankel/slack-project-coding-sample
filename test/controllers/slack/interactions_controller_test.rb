@@ -218,8 +218,7 @@ module Slack
                 .with(
                   body: {
                     # Regex allows for ensuring that future channel names in test setup always work
-                    name: /(\d+)-my-first-incident/,
-                    team_id: team_id
+                    name: /(\d+)-my-first-incident/
                   }
                 ).to_return(body: stubbed_create_channel_result)
 

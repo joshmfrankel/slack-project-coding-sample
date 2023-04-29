@@ -15,7 +15,10 @@ module Slack
       )
 
       if result[:ok] == true
-        slack_team = SlackTeam.new(access_token: result[:access_token], external_team_id: result[:team][:id])
+        slack_team = SlackTeam.new(
+          access_token: result[:access_token],
+          external_team_id: result[:team][:id]
+        )
 
         if slack_team.save
           head :ok
