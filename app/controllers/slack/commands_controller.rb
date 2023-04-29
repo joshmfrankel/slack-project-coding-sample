@@ -16,7 +16,7 @@ module Slack
 
       case text_command
       when "declare"
-        client = Slack::Web::Client.new # Future: abstract out into singleton
+        client = Slack::Web::Client.new
         client.views_open(
           trigger_id: params[:trigger_id],
           view: {
@@ -35,7 +35,8 @@ module Slack
                 type: "input",
                 element: {
                   type: "plain_text_input",
-                  action_id: "title_input"
+                  action_id: "title_input",
+                  initial_value: text_payload
                 },
                 label: {
                   type: "plain_text",

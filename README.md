@@ -9,6 +9,8 @@ web: https://slack-bot-challenge.onrender.com/
 * Service pattern with [dry-monads](https://dry-rb.org/gems/dry-monads/1.3/do-notation/)
 * Presenter pattern with [SimpleDelegator](https://ruby-doc.org/stdlib-2.5.1/libdoc/delegate/rdoc/SimpleDelegator.html)
 * Transformer pattern for unpacking JSON payloads
+* I18n for all front-end content and Time formatting
+* [ActiveRecord encryption](https://edgeguides.rubyonrails.org/active_record_encryption.html#setup) for secure storage of Team Oauth access_tokens
 
 ## Dependencies
 
@@ -20,10 +22,37 @@ web: https://slack-bot-challenge.onrender.com/
 * should-context - For useful Minitest DSL syntax
 * mocha - For mocking objects in Minitest
 * pry - For general debugging purposes
+* climate_control - For stubbing EnvVars in tests
 
-## Limitations
+## Future Concerns
 
-* There is no User authentication. In a real application this would be important to segment data.
-* There are no business logic authorization checks. I would implement policies with the usage of [Pundit](https://github.com/varvet/pundit). The policy pattern would ensure we can answer the following questions: "Can this user perform this action?" and "Can this user access this resource?"
-* Slack access tokens are not rotated and are therefore never expire. In production,
-they should be rotated. https://api.slack.com/authentication/rotation
+### User Authentication
+
+Currently, there is no User authentication for the Web UI. Since our app is already participating in Slack's OAuth flow, a good approach would be to have the User OAuth with there Slack User. This could then be utilized as their login credentials. This works nicely
+since the application is predicated on the fact that they would already be utilizing Slack and would have a valid User.
+
+### Authorization
+
+As the Web UI grows, we'd want to implementation authorization logic to answer the following two questions:
+
+1. Can this User perform this action?
+2. Can this User interact with this resource?
+
+Importantly, would be to segment the Incident data shown in the Web UI to only contain resources which the current_user is authorized to view. I would implement this by utilizing [Pundit](https://github.com/varvet/pundit) for creation of a new policy pattern. The current user would then be checked against the proper Policy class to determine records they can access and actions they can take.
+
+### Token Rotation
+
+The OAuth tokens stored in the SlackTeam table are currently not set to be rotated. Therefore they are long lasting. A good next step here would be to enable token rotation/refreshing. Currently, I have the implementation logic set to regenerate access_tokens for SlackTeam records that the team_id already exists for. This is important in case a Team removes our Slack app and reinstalls it OR they simply run through the OAuth flow process again. See documentation here: https://api.slack.com/authentication/rotation
+
+### UI Library, Design System, & ViewComponents
+
+The Web UI is simply a list of Incidents currently but as it grows in functionality ensuring application design cohesion will become important. One way I've accomplished this in the past is to create a standard Design System in which to base all future design solutions around. Tailwind CSS works nicely here for the foundational setup of default styling. In addition to this, crafting a UI Library with the help of ViewComponents for common front-end patterns and elements (e.g. Dropdowns, Buttons, Links).
+
+### Background Jobs
+
+As Web applications grow, offloading processing into asynchronous queues becomes important for complex logic. Our application is simple at the moment but there is potential for some
+actions to take longer than the User expects. I would utilize [Sidekiq](https://github.com/sidekiq/sidekiq) to create a queue system for async jobs along with implementing a standard base class Job pattern.
+
+### Monitoring
+
+I would monitor the health and performance of our application with Honeybadger (error reporting) and Datadog (APM & metrics). Honeybadger nicely integrates into Slack as well.
