@@ -1,6 +1,7 @@
 # Slack bot challenge
 
 web: https://slack-bot-challenge.onrender.com/
+project: https://github.com/users/joshmfrankel/projects/5/views/1?layout=board
 
 ## Technology & Patterns
 
@@ -9,6 +10,7 @@ web: https://slack-bot-challenge.onrender.com/
 * Service pattern with [dry-monads](https://dry-rb.org/gems/dry-monads/1.3/do-notation/)
 * Presenter pattern with [SimpleDelegator](https://ruby-doc.org/stdlib-2.5.1/libdoc/delegate/rdoc/SimpleDelegator.html)
 * Transformer pattern for unpacking JSON payloads
+* Query object pattern for dealing with sorting and filtering records
 * I18n for all front-end content and Time formatting
 * [ActiveRecord encryption](https://edgeguides.rubyonrails.org/active_record_encryption.html#setup) for secure storage of Team Oauth access_tokens
 

@@ -3,38 +3,39 @@
   <h1><%= I18n.t("incidents.index.title") %></h1>
 <% end %>
 
-<% @incidents.each do |incident| %>
-  <% incident = IncidentPresenter.new(incident) %>
-
-  <div class="flex border border-gray-300 p-5 mb-3 rounded incident">
-    <div class="pr-7 border-r border-gray-100 w-33">
-      <h2 class="mb-0"><%= incident.title %></h2>
-      <div class="text-sm">
-        <p class="text-gray-500"><%= I18n.l(incident.created_at, format: :long) %></p>
-        <% if incident.severity.present? %>
-          <p class="mb-0"><strong><%= I18n.t("incidents.index.severity") %></strong>: <%= incident.severity %></p>
-        <% end %>
-
-        <% if incident.status.present? %>
-          <p class="mb-0"><strong><%= I18n.t("incidents.index.status") %></strong>: <span class="<%= incident.status_classes %>"><%= incident.status %></span></p>
-        <% end %>
-
-        <% if incident.external_slack_user_name.present? %>
-          <p class="mb-0"><strong><%= I18n.t("incidents.index.creator") %></strong>: <%= incident.external_slack_user_name %></p>
-        <% end %>
-
-        <p class="mb-0"><strong><%= I18n.t("incidents.index.slack_channel") %></strong>: #<%= incident.slack_channel_name %></p>
-      </div>
+<%= turbo_frame_tag "incidents", data: { turbo_action: "advance" } do %>
+  <div class="mb-5 flex bg-stone-400 rounded p-5 text-white">
+    <div class="flex flex-col mr-11">
+      <h2><%= I18n.t("incidents.index.sorting.title") %></h2>
+      <span><strong><%= I18n.t("incidents.index.sorting.created_date") %></strong>:</span>
+      <%= link_to I18n.t("incidents.index.sorting.newest"), url_for(sort: :desc), class: "text-white" %>
+      <%= link_to I18n.t("incidents.index.sorting.oldest"), url_for(sort: :asc), class: "text-white" %>
     </div>
 
-    <% if incident.description.present? %>
-      <div class="pl-7">
-        <p><%= incident.description %></p>
-      </div>
-    <% end %>
+    <div class="flex flex-col mr-11">
+      <h2><%= I18n.t("incidents.index.filtering.title") %></h2>
+      <span><strong><%= I18n.t("incidents.index.filtering.severity") %></strong></span>
+      <%= link_to I18n.t("incidents.index.filtering.sev0"), url_for(severity: 0), class: "text-white" %>
+      <%= link_to I18n.t("incidents.index.filtering.sev1"), url_for(severity: 1), class: "text-white" %>
+      <%= link_to I18n.t("incidents.index.filtering.sev2"), url_for(severity: 2), class: "text-white" %>
+
+      <span><strong>Status</strong></span>
+      <%= link_to I18n.t("incidents.index.filtering.declared"), url_for(status: :declared), class: "text-white" %>
+      <%= link_to I18n.t("incidents.index.filtering.resolved"), url_for(status: :resolved), class: "text-white" %>
+    </div>
+
+    <div class="flex flex-col">
+      <%= link_to I18n.t("incidents.index.clear"), url_for, class: "text-white" %>
+    </div>
+  </div>
+
+  <% if @incidents.empty? %>
+    <div><%= I18n.t("incidents.index.blank_state") %></div>
+  <% end %>
+
+  <%= render partial: "incident", collection: @incidents %>
+
+  <div class="flex flex-col items-center p-5 bg-stone-400 text-white rounded">
+    <%= pagy_nav(@pagy).html_safe %>
   </div>
 <% end %>
-
-<div class="flex flex-col items-center p-5">
-  <%= pagy_nav(@pagy).html_safe %>
-</div>
