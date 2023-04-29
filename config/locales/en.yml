@@ -43,6 +43,22 @@ en:
       status: Status
       slack_channel: Channel
       creator: Creator
+      clear: Clear sort and filters
+      blank_state: No available Incidents with filter critieria
+      sorting:
+        title: Sort by
+        created_date: Created date
+        newest: Newest
+        oldest: Oldest
+      filtering:
+        title: Filter by
+        severity: Severity
+        sev0: Severity (sev0)
+        sev1: Severity (sev1)
+        sev2: Severity (sev2)
+        status: Status
+        declared: Declared
+        resolved: Resolved
 
   slack:
     commands:

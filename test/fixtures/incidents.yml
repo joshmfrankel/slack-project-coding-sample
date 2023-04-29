@@ -1,0 +1,14 @@
+
+declared:
+  title: Declared severity 1
+  description: MyText
+  severity: 1
+  status: 0
+  external_slack_user_id: 1
+
+resolved:
+  title: Resolved severity 2
+  description: MyText
+  severity: 2
+  status: 1
+  external_slack_user_id: 2
