@@ -44,9 +44,18 @@ module Slack
           end
 
           should "log a server message and respond with no_content when the callback_id is unknown" do
+            slack_team_mock = mock
+            SlackTeam
+              .expects(:find_by)
+              .with(external_team_id: "T09125712")
+              .returns(slack_team_mock)
+
             payload_json = {
               view: {
                 callback_id: "unknown"
+              },
+              team: {
+                id: "T09125712"
               }
             }.to_json
 
@@ -59,6 +68,13 @@ module Slack
         context "with valid payload" do
           context "when CreateIncidentService encounters a failure" do
             should "update modal for ActiveRecord validation errors" do
+              slack_team_mock = mock
+              SlackTeam
+                .expects(:find_by)
+                .with(external_team_id: "T09125712")
+                .returns(slack_team_mock)
+              slack_team_mock.expects(:access_token).returns("token_string")
+
               payload_json = {
                 user: {
                   id: "XHDI12AH"
@@ -110,6 +126,13 @@ module Slack
             end
 
             should "update modal for Slack api service errors" do
+              slack_team_mock = mock
+              SlackTeam
+                .expects(:find_by)
+                .with(external_team_id: "T09125712")
+                .returns(slack_team_mock)
+              slack_team_mock.expects(:access_token).returns("token_string")
+
               payload_json = {
                 user: {
                   id: "XHDI12AH"
@@ -170,6 +193,7 @@ module Slack
           context "when CreateIncidentService is successful" do
             should "parses payload, sends messages to Slack API, and persists to Incident model" do
               team_id = "T09125712"
+              SlackTeam.create(external_team_id: team_id, access_token: "string_token")
               payload_json = {
                 user: {
                   id: "XHDI12AH"
@@ -218,8 +242,7 @@ module Slack
                 .with(
                   body: {
                     # Regex allows for ensuring that future channel names in test setup always work
-                    name: /(\d+)-my-first-incident/,
-                    team_id: team_id
+                    name: /(\d+)-my-first-incident/
                   }
                 ).to_return(body: stubbed_create_channel_result)
 

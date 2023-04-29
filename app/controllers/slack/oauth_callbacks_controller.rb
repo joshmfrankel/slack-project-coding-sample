@@ -7,14 +7,27 @@ module Slack
   class OauthCallbacksController < ApplicationController
     def new
       client = Slack::Web::Client.new
-      client.oauth_v2_access(
+      result = client.oauth_v2_access(
         code: params[:code],
         client_id: ENV["SLACK_CLIENT_ID"],
         client_secret: ENV["SLACK_CLIENT_SECRET"],
         redirect_uri: ENV["SLACK_OAUTH_REDIRECT_URI"]
       )
 
-      head :ok
+      if result[:ok] == true
+        slack_team = SlackTeam.find_or_initialize_by(
+          external_team_id: result[:team][:id]
+        )
+
+        # Subsequent oauth attempts update access_token
+        if slack_team.update(access_token: result[:access_token])
+          head :ok
+        else
+          head 500
+        end
+      else
+        head 500
+      end
     end
   end
 end
