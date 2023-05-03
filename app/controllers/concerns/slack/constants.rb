@@ -5,5 +5,6 @@ module Slack
     extend ActiveSupport::Concern
 
     CREATE_INCIDENT_MODAL_CALLBACK_ID = "declare-incident-modal"
+    SLACK_URL = "https://slack.com"
   end
 end

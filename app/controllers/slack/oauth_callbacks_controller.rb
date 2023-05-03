@@ -5,6 +5,8 @@ module Slack
   # @see https://api.slack.com/authentication/oauth-v2#exchanging
   # @see https://api.slack.com/methods/oauth.v2.access
   class OauthCallbacksController < ApplicationController
+    include Slack::Constants
+
     def new
       return head 400 if session[:state] != params[:state]
 
@@ -25,7 +27,7 @@ module Slack
 
         # Subsequent oauth attempts update access_token
         if slack_team.update(access_token: result[:access_token])
-          head :ok
+          redirect_to "#{SLACK_URL}/app_redirect?channel=general", allow_other_host: true
         else
           head 500
         end

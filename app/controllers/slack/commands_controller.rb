@@ -12,7 +12,7 @@ module Slack
     # @see https://www.rubydoc.info/docs/rails/3.2.8/ActionView/Helpers/DateHelper:distance_of_time_in_words
     def create
       return json_error_response unless params[:text].present?
-      text_command, text_payload = params[:text].split(" ", 2)
+      text_command, text_payload = params[:text].split(" ", 2) || ""
 
       case text_command
       when "declare"
