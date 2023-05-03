@@ -90,6 +90,7 @@ module Slack
           slack_team = SlackTeam.find_by(external_team_id: team_id)
 
           assert_equal "my_token", slack_team.access_token
+          assert_redirected_to "https://slack.com/app_redirect?channel=general"
         end
       end
 
@@ -138,6 +139,7 @@ module Slack
           slack_team = SlackTeam.find_by(external_team_id: team_id)
 
           assert_equal "updated_token", slack_team.access_token
+          assert_redirected_to "https://slack.com/app_redirect?channel=general"
         end
       end
     end
