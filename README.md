@@ -18,6 +18,8 @@ project: https://github.com/users/joshmfrankel/projects/5/views/1?layout=board
 * I18n for all front-end content and Time formatting
 * [ActiveRecord encryption](https://edgeguides.rubyonrails.org/active_record_encryption.html#setup) for secure storage of Team Oauth access_tokens
 * [Slack Oauth flow](https://github.com/joshmfrankel/slack-project-coding-sample/blob/main/app/controllers/slack/oauth_callbacks_controller.rb)
+* [Github CI Actions](https://github.com/joshmfrankel/slack-project-coding-sample/blob/main/.github/workflows/testing.yml) are configured to ensure Minitest is successful before merging PRs
+* [Github Project](https://github.com/users/joshmfrankel/projects/5) was utilized to organize and segment work. Each unit of change is contained within a well written user story and pull request.
 
 ## Dependencies
 
