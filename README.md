@@ -1,4 +1,6 @@
-# Slack bot challenge
+# Slack Project Coding Sample
+
+A sample of my coding style in the format of a Slack bot project. The bot is able to respond to several commands which interact with the application's data. Additionally, the application has a simple paginated front-end that utilzes Turbo Frames from Hotwire.
 
 web: https://slack-bot-challenge.onrender.com/
 project: https://github.com/users/joshmfrankel/projects/5/views/1?layout=board
@@ -7,12 +9,17 @@ project: https://github.com/users/joshmfrankel/projects/5/views/1?layout=board
 
 * Ruby on Rails
 * [Tailwind CSS](https://tailwindcss.com/) inspired css
-* Service pattern with [dry-monads](https://dry-rb.org/gems/dry-monads/1.3/do-notation/)
-* Presenter pattern with [SimpleDelegator](https://ruby-doc.org/stdlib-2.5.1/libdoc/delegate/rdoc/SimpleDelegator.html)
-* Transformer pattern for unpacking JSON payloads
-* Query object pattern for dealing with sorting and filtering records
+* [Hotwire Turbo Frames](https://github.com/joshmfrankel/slack-project-coding-sample/blob/main/app/views/incidents/index.html.erb)
+* [Minitest code coverage](https://github.com/joshmfrankel/slack-project-coding-sample/tree/main/test)
+* [Service pattern](https://github.com/joshmfrankel/slack-project-coding-sample/tree/main/app/services) with [dry-monads](https://dry-rb.org/gems/dry-monads/1.3/do-notation/)
+* [Presenter pattern](https://github.com/joshmfrankel/slack-project-coding-sample/tree/main/app/presenters) with [SimpleDelegator](https://ruby-doc.org/stdlib-2.5.1/libdoc/delegate/rdoc/SimpleDelegator.html)
+* [Transformer pattern](https://github.com/joshmfrankel/slack-project-coding-sample/tree/main/app/transformers/slack) for unpacking JSON payloads
+* [Query object pattern](https://github.com/joshmfrankel/slack-project-coding-sample/tree/main/app/queries) for dealing with sorting and filtering records
 * I18n for all front-end content and Time formatting
 * [ActiveRecord encryption](https://edgeguides.rubyonrails.org/active_record_encryption.html#setup) for secure storage of Team Oauth access_tokens
+* [Slack Oauth flow](https://github.com/joshmfrankel/slack-project-coding-sample/blob/main/app/controllers/slack/oauth_callbacks_controller.rb)
+* [Github CI Actions](https://github.com/joshmfrankel/slack-project-coding-sample/blob/main/.github/workflows/testing.yml) are configured to ensure Minitest is successful before merging PRs
+* [Github Project](https://github.com/users/joshmfrankel/projects/5) was utilized to organize and segment work. Each unit of change is contained within a well written user story and pull request.
 
 ## Dependencies
 
@@ -58,3 +65,7 @@ actions to take longer than the User expects. I would utilize [Sidekiq](https://
 ### Monitoring
 
 I would monitor the health and performance of our application with Honeybadger (error reporting) and Datadog (APM & metrics). Honeybadger nicely integrates into Slack as well.
+
+### ViewComponents & Design System
+
+As the application grows, it is important to standardize front-end components. ViewComponents give an additional layer on the standard Rails view layer similiar to the Presenter pattern. Using ViewComponents and TailwindCSS I would build a design system to ensure consistent UX throughout the application. This would also help create a common design language between Product Design, Software Engineers, and Product Directors.
